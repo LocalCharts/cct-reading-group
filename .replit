@@ -1,0 +1,7 @@
+run = "cd cct_reading_group; dune utop"
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "cd ocaml; dune utop"]

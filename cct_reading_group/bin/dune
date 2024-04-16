@@ -1,0 +1,4 @@
+(executable
+ (public_name cct_reading_group)
+ (name main)
+ (libraries cct_reading_group))
