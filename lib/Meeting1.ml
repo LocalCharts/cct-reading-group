@@ -12,9 +12,9 @@ type ('o, 'a) cat = {
 }
 
 let nat_monoid: (unit, int) cat = {
-  dom = (fun x -> ());
-  codom = (fun x -> ());
-  id = (fun x -> 0);
+  dom = (fun _ -> ());
+  codom = (fun _ -> ());
+  id = (fun _ -> 0);
   compose = (fun f g -> f + g);
 }
 
