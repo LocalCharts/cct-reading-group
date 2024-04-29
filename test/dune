@@ -1,2 +1,3 @@
 (test
- (name cct_reading_group))
+ (name cct_reading_group)
+ (libraries cct_reading_group))
