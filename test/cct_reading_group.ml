@@ -1,4 +1,6 @@
 open Cct_reading_group.Categories
+open Cct_reading_group.Graph
+open Cct_reading_group.Fin_set
 
 let g: graph = {
   source = graph_schema;
