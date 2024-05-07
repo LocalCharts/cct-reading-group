@@ -20,6 +20,7 @@
         pkgs.ocamlPackages.utop
         pkgs.ocamlPackages.ocaml-lsp
         pkgs.ocamlPackages.owl
+        pkgs.ocamlPackages.alcotest
         ];
       };
       env = {
