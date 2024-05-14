@@ -1,2 +1,3 @@
-(test
- (name cct_reading_group))
+(tests
+ (names GraphTest Fin_setTest)
+ (libraries cct_reading_group alcotest))
