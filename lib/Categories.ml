@@ -12,6 +12,8 @@ type ('o, 'a) cat = {
   compose : 'a -> 'a -> 'a;
 }
 
+exception Dom_codom_mismatch
+
 type ('oA, 'aA, 'oB, 'aB) catfunctor = {
   source:  ('oA, 'aA) cat;
   target: ('oB, 'aB) cat;
