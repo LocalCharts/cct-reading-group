@@ -1,0 +1,2 @@
+(library
+ (name module_based))
