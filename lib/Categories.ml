@@ -1,29 +1,78 @@
-type ('o, 'a) cat = {
-  dom : 'a -> 'o;
-  codom : 'a -> 'o;
-  id : 'o -> 'a;
-  (* if f : x -> y, and g : y -> z
-  then (compose f g) : x -> z
 
-  This means that when we compose, we have to check
-  that `codom f == dom g`, (because codom f == y in the
-  above statement).
-  *)
-  compose : 'a -> 'a -> 'a;
-}
+module type Cat = sig
+  type ob
+  type hom
+
+  val dom : hom -> ob
+  val codom : hom -> ob
+
+  val id : ob -> hom
+  val compose : hom -> hom -> hom
+end
 
 exception Dom_codom_mismatch
 
-type ('oA, 'aA, 'oB, 'aB) catfunctor = {
-  source:  ('oA, 'aA) cat;
-  target: ('oB, 'aB) cat;
-  ap_ob: ('oA -> 'oB);
-  ap_hom: ('aA -> 'aB);
-}
+exception Bad_identity_implementation
 
-let dual_cat (c: ('o, 'a) cat): ('o, 'a) cat = {
-  dom = c.codom;
-  codom = c.dom;
-  id = c.id;
-  compose = (fun f g -> c.compose g f)
-}
+(* checks - 
+  id returns the values it was given 
+  compose (every): domain of f = codomain of g
+*)
+
+
+module type Homorphisms = sig
+  type ob
+  type hom
+  val dom : hom -> ob
+  val codom : hom -> ob
+  val id : ob -> hom
+  val compose_impl: hom -> hom -> hom 
+end 
+
+module CatMake = functor
+  (Hom : Homorphisms)
+ -> struct
+  type ob = Hom.ob
+  type hom = Hom.hom
+  let dom = Hom.dom
+  let codom = Hom.codom
+  let id = Hom.id(* let result = (Hom.apply (Hom.id x) x) in if x == result 
+    then result
+    else raise Bad_identity_implementation*)
+  let compose f g = if (codom f) == (dom g)
+    then Hom.compose_impl f g
+    else raise Dom_codom_mismatch
+end
+
+(*
+module type CatFunctor = sig
+  type so = Cat.ob
+  type sh = Cat.hom
+  type to = Cat.ob
+  type th = Cat.hom
+  val source : s
+  val target : t
+  val ap_ob : so -> to
+  val ap_hom: sh -> th
+end
+*)
+
+(*
+module CatFunctorMake = functor (C: Cat) (D: Cat) -> struct
+  type ob = C.ob
+  type hom = C.hom
+  let source = C
+  let target = D
+  let ap_ob = (fun x -> C.dom x)
+  let ap_hom = (fun x -> C.dom x)
+end
+*)
+
+module Dual = functor (C: Cat) -> struct
+  type ob = C.ob
+  type hom = C.hom
+  let dom = C.codom
+  let codom = C.dom
+  let id = C.id
+  let compose f g = C.compose g f
+end

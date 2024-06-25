@@ -25,26 +25,20 @@ let mk_fin_function codomain values =
     }
     else raise Values_out_of_codomain
 
-let fin_cat : (int, fin_function) cat = {
-  dom = (fun f -> f.dom);
-  codom = (fun f -> f.codom);
-  id = (fun n -> { 
-    dom = n;
-    codom = n;
-    values = Array.init n (fun i -> i)
-  });
-  (*
-  When we compose f and g to make (f;g), this new
-  function should satisfy (f;g)(i) = g(f(i))
-  *)
-  compose = (fun f g ->  
-    if f.codom == g.dom
-    then {
+
+module FinSetHoms = struct
+  type ob = int
+  type hom = fin_function
+  let dom f = f.dom
+  let codom f = f.codom
+  let id x = { dom = x; codom = x; values = Array.init x (fun i -> i) }
+  let compose_impl f g = {
       dom = f.dom;
       codom = g.codom;
-      values = Array.init f.dom (fun x -> g.values.(f.values.(x)))
+      values = Array.init f.dom (fun i -> g.values.(f.values.(i)))
     }
-    else raise Categories.Dom_codom_mismatch);
-}
+end
 
-let fin_cat_op = dual_cat fin_cat
+module FinSetCat = CatMake(FinSetHoms)
+
+module DualFinSetCat = Dual(FinSetCat)
